@@ -1,5 +1,3 @@
-use std::u16;
-
 use crossterm::{QueueableCommand, cursor::MoveTo, style::{Attribute, Color, Print, SetAttribute, SetForegroundColor}, terminal::{Clear, ClearType}};
 use unicode_width::UnicodeWidthStr;
 

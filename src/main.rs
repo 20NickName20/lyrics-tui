@@ -42,7 +42,7 @@ impl AppData {
             let lyrcis_source = song_info.as_ref().and_then(|(artist, title)| {
                 load_lyrics(artist, title)
             });
-            lyrics = lyrcis_source.map(|s| Lyrics::from(s));
+            lyrics = lyrcis_source.map(Lyrics::from);
         })?;
         Ok(Self {
             lyrics,
@@ -66,7 +66,7 @@ impl AppData {
                 let lyrcis_source = self.song_info.as_ref().and_then(|(artist, title)| {
                     load_lyrics(artist, title)
                 });
-                self.lyrics = lyrcis_source.map(|s| Lyrics::from(s));
+                self.lyrics = lyrcis_source.map(Lyrics::from);
                 self.redraw_lyrics = true;
                 self.redraw_title = true;
             }
