@@ -87,10 +87,6 @@ impl Lyrics {
         }
     }
 
-    pub fn get_line_count(&self) -> usize {
-        self.lines.len()
-    }
-
     pub fn get_line(&self, number: usize) -> &str {
         let Some(idx) = number.checked_sub(1) else {
             return "";

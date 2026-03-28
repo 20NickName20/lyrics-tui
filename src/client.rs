@@ -7,17 +7,14 @@ const FETCH_INTERVAL: Duration = Duration::from_millis(1000);
 struct State {
     is_playing: bool,
     position: Duration,
-    metadata: Metadata,
-    length: Option<Duration>
+    metadata: Metadata
 }
 
 fn fetch_state(player: &Player) -> anyhow::Result<State> {
-    let metadata = player.get_metadata()?;
-    let length = metadata.length();
     Ok(State {
         is_playing: player.get_playback_status()? == PlaybackStatus::Playing,
         position: player.get_position()?,
-        metadata, length
+        metadata: player.get_metadata()?
     })
 }
 
@@ -45,10 +42,6 @@ impl Client {
             last_fetch: Instant::now(),
             last_pos_fetch: Instant::now()
         })
-    }
-
-    pub fn is_playing(&self) -> bool {
-        self.state.as_ref().map(|s| s.is_playing).unwrap_or(false)
     }
 
     pub fn get_position(&self) -> Duration {
