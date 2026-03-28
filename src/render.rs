@@ -1,4 +1,7 @@
+use std::u16;
+
 use crossterm::{QueueableCommand, cursor::MoveTo, style::{Attribute, Color, Print, SetAttribute, SetForegroundColor}, terminal::{Clear, ClearType}};
+use unicode_width::UnicodeWidthStr;
 
 use crate::LyricsApp;
 
@@ -20,7 +23,8 @@ pub fn draw_lyrics(app: &mut LyricsApp) -> anyhow::Result<()> {
             let line = (app.data.current_line + i as usize).saturating_sub(draw_lines as usize / 2);
             let color = Color::AnsiValue(FADE_PALLETE[4 - i.abs_diff(draw_lines / 2) as usize]);
             let lyric = lyrics.get_line(line);
-            let x = (width.saturating_sub(lyric.chars().count() as u16)) / 2;
+            let text_width = UnicodeWidthStr::width(lyric) as u16;
+            let x = width.saturating_sub(text_width) / 2;
             app.stdout
                 .queue(MoveTo(LYRICS_POS.0, LYRICS_POS.1 + start_line + i))?
                 .queue(Print(&clear_str))?
@@ -137,7 +141,7 @@ pub fn draw_title(app: &mut LyricsApp) -> anyhow::Result<()> {
         .queue(MoveTo(LYRICS_POS.0, LYRICS_POS.1 + y))?
         .queue(Print(" ".repeat(width as usize)))?;
     if let Some((artist, title)) = app.data.song_info.as_ref() {
-        let len = artist.chars().count() + 3 + title.chars().count();
+        let len = UnicodeWidthStr::width(artist.as_str()) + 3 + UnicodeWidthStr::width(title.as_str());
         let x = (width.saturating_sub(len as u16)) / 2;
         app.stdout
             .queue(SetForegroundColor(Color::White))?
