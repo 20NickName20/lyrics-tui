@@ -34,16 +34,9 @@ type LyricsApp = App<AppData>;
 impl AppData {
     fn new() -> anyhow::Result<Self> {
         let visible_lines = terminal::size()?.1.saturating_sub(8);
-        let mut client = Client::new()?;
-        let mut lyrics = None;
-        let mut song_info = None;
-        client.update(|new_song_info| {
-            song_info = new_song_info;
-            let lyrcis_source = song_info.as_ref().and_then(|(artist, title)| {
-                load_lyrics(artist, title)
-            });
-            lyrics = lyrcis_source.map(Lyrics::from);
-        })?;
+        let client = Client::new()?;
+        let lyrics = None;
+        let song_info = None;
         Ok(Self {
             lyrics,
             current_line: 0,
